@@ -1,0 +1,6 @@
+﻿  sample.cpp
+\\depot.engr.oregonstate.edu\users\upthagrg\windows.documents\desktop\gitv\vksolidteapot\sample2017\vk_teapot.hpp(284): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\depot.engr.oregonstate.edu\users\upthagrg\windows.documents\desktop\gitv\vksolidteapot\sample2017\vk_teapot.hpp(285): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\depot.engr.oregonstate.edu\users\upthagrg\windows.documents\desktop\gitv\vksolidteapot\sample2017\vk_teapot.hpp(286): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\depot.engr.oregonstate.edu\users\upthagrg\windows.documents\desktop\gitv\vksolidteapot\sample2017\vk_teapot.hpp(295): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Sample.vcxproj -> \\depot.engr.oregonstate.edu\users\upthagrg\Windows.Documents\Desktop\gitv\vkSolidTeapot\Sample2017\Debug\Sample.exe

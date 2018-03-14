@@ -1,0 +1,78 @@
+#version 440
+#extension GL_ARB_compute_shader : enable
+
+layout( std140, set = 0, binding = 0 ) buffer Pos
+{
+    vec4 Positions[ ];
+};
+
+layout( std140, set = 0, binding = 1 ) buffer Vel
+{
+    vec4 Velocities[ ];
+};
+
+layout( std140, set = 0, binding = 2 ) buffer Col
+{
+    vec4 Colors[ ];
+};
+
+layout( constant_id = 0 )  const int numXworkItems = 32;
+
+layout( local_size_x = numXworkItems,  local_size_y = 1, local_size_z = 1 )   in;
+
+//layout( local_size_x = 128,  local_size_y = 1, local_size_z = 1 )   in;
+
+#define POINT		vec3
+#define VELOCITY	vec3
+#define VECTOR		vec3
+#define SPHERE		vec4
+
+const VECTOR  G     = vec3( 0., -9.8, 0. );
+const float  DT     = 0.1;
+
+const SPHERE Sphere = vec4( -100., -800., 0.,  600. );	// x, y, z, r 
+
+
+VELOCITY
+Bounce( VELOCITY vin, VECTOR n )
+{
+	VELOCITY vout = reflect( vin, n );
+	return vout;
+}
+
+VELOCITY
+BounceSphere( POINT p, VELOCITY v, SPHERE s )
+{
+	VECTOR n = normalize( p - s.xyz );
+	return Bounce( v, n );
+}
+
+bool
+IsInsideSphere( POINT p, SPHERE s )
+{
+	float r = length( p - s.xyz );
+	return  ( r < s.w );
+}
+
+
+void
+main( )
+{
+
+	uint  gid = gl_GlobalInvocationID.x;	// the .y and .z are both 1 in this case
+
+	POINT p  = Positions[  gid  ].xyz;
+	VELOCITY v  = Velocities[ gid  ].xyz;
+
+	POINT pp = p + v*DT + .5*DT*DT*G;
+	VELOCITY vp = v + G*DT;
+
+	if( IsInsideSphere( pp, Sphere ) )
+	{
+		vp = BounceSphere( p, v, Sphere );
+		pp = p + vp*DT + .5*DT*DT*G;
+	}
+
+	Positions[  gid  ].xyz = pp;
+	Velocities[ gid  ].xyz = vp;
+}
