@@ -1,3 +1,17 @@
+/********************************************************************************
+*Title: vk_teapot.hpp
+*Date: 03/14/2018
+*Descrition: A vulkan implementation of the glutSolidTeapot. This is not stand
+*alone. You also require vertex.hpp and vk_teapot_data.h to make a teapot. 
+*I suggest following Sample.cpp to see the relevant function calls and types
+*to make this work in your applications. I also suggest instancing for multiple
+*teapots. Original comments and naming conventions have been followed as 
+*closely as possible from FreeGLUT. Some functionality has yet to be 
+*implemented in this port. S and T coordinates do not work yet, nore does 
+*caching. The solid teapot is the only object implemented at this time. 
+*I have plans to implement the rest as solid and wireframe, and of course 
+*a wireframe teapot. 
+********************************************************************************/
 #include <cmath>
 #include <iostream>
 #include "glm/vec2.hpp"
@@ -50,23 +64,9 @@ static bool initedTeapotW   = false;
 
 int vkTeapotSize=0;
 
+//the color of the teapot
 glm::vec3 cur_color = glm::vec3(1.0, 0.0, 0.0);
 
-// *******************
-// VERTEX BUFFER DATA:
-// *******************
-
-//#ifdef DEFINITION
-/*
-struct vertex
-{
-	glm::vec3	position;
-	glm::vec3	normal;
-	glm::vec3	color;
-	glm::vec2	texCoord;
-};
-//#endif
-*/
 
 static void bernstein3(int i, float x, float *r0, float *r1)
 {
@@ -351,6 +351,7 @@ static void fghTeaset( double scale, bool useWireMode,
         }
     }
 
+    //Disabled, drawing will be done by the application. 
     /* draw */
 	/*
     if (useWireMode)
@@ -360,10 +361,12 @@ static void fghTeaset( double scale, bool useWireMode,
 	*/
 }
 
+//allows user to change teapot solid color. Must be called before vkSolidTeapot to work. The default color is red. 
 void set_teapot_color(float r, float g, float b){
 	cur_color = glm::vec3(r, g, b);
 }
 
+//This function is equivalent of glutSolidTeapot. Creates an array of vertex structs and returns the pointer. 
 struct vertex* vkSolidTeapot( double size )
 {
     //FREEGLUT_EXIT_IF_NOT_INITIALISED ( "glutSolidTeapot" );
@@ -374,61 +377,22 @@ struct vertex* vkSolidTeapot( double size )
                &lastScaleTeapotS, &initedTeapotS,
                true, true, 1.575f,
                GLUT_SOLID_TEAPOT_N_VERT, GLUT_TEAPOT_N_INPUT_PATCHES, GLUT_TEAPOT_N_PATCHES, GLUT_SOLID_TEAPOT_N_TRI);
-	//struct vertex
-	//struct vertex* ret = new struct vertex[GLUT_SOLID_TEAPOT_N_VERT];
-	//struct vertex* ret = new struct vertex[GLUT_SOLID_TEAPOT_N_TRI*3];
-	struct vertex* ret = new struct vertex[9408];
-	vkTeapotSize = 9408 * sizeof(struct vertex);
-	//vkTeapotSize = (GLUT_SOLID_TEAPOT_N_VERT) * sizeof(struct vertex);
-	//vkTeapotSize = (GLUT_SOLID_TEAPOT_N_TRI*3) * sizeof(struct vertex);
-	//int track = 0;
-	int track2 = 0;
-	//for(int i=0; i<(GLUT_SOLID_TEAPOT_N_VERT)-2; i++ ){
-	//for(int i=0; i<(GLUT_SOLID_TEAPOT_N_TRI*3)-2; i++){
-	//	(ret[i]).position = glm::vec3(vertsTeapotS[track], vertsTeapotS[track+1], vertsTeapotS[track+3]);
-	//	std::cout<<"point " <<i<< ": " <<vertsTeapotS[track]<<"," <<vertsTeapotS[track+1]<<","<< vertIdxsTeapotS[track+2]<<std::endl;
-	//	(ret[i]).normal = glm::vec3(normsTeapotS[track], normsTeapotS[track+1], normsTeapotS[track+2]);
-	//	track+=3;
-		//(ret[i]).texCoord = glm::vec2(texcsTeapotS[track2], texcsTeapotS[track2+1]);
-		//track2+=2;
-	//	(ret[i]).color = cur_color;
-		
-	//}
-	int track=0;
-	//for(int i=0; i<2048; i++){
-	//	(ret[i]).position = glm::vec3(
-	//}
-	//for(int i=0; i<(GLUT_SOLID_TEAPOT_N_VERT)-2; i++){
+	struct vertex* ret = new struct vertex[9408]; //allocate the struct vertex array
+	vkTeapotSize = 9408 * sizeof(struct vertex); //size in bytes of vertex data
+	int track2 = 0; //old debug variable
+	int track=0;//old debug variable 
 	for(int i=0; i<(GLUT_SOLID_TEAPOT_N_TRI*3); i++){
-	//	for(int i=0; i<(6); i++){
-			//(ret[i]).position = glm::vec3(vertsTeapotS[track], vertsTeapotS[track+1], vertsTeapotS[track+3]);
-			//std::cout<<"vertIdxsTeapotS["<<i<<"]: "<<vertIdxsTeapotS[i]<<std::endl;
+			//vertex = vertex float data at vertex index * 3, + following two floats
 			(ret[i]).position = glm::vec3(vertsTeapotS[((vertIdxsTeapotS[i] * 3))], vertsTeapotS[((vertIdxsTeapotS[i] * 3)+1)], vertsTeapotS[((vertIdxsTeapotS[i] * 3)+2)]);
 			(ret[i]).normal = glm::vec3(normsTeapotS[((vertIdxsTeapotS[i] * 3))], normsTeapotS[((vertIdxsTeapotS[i] * 3)+1)], normsTeapotS[((vertIdxsTeapotS[i] * 3)+2)]);
-			(ret[i]).texCoord = glm::vec2(0.0,0.0);
-			//std::cout << "pos: " << (ret[i]).position[0] << " " << (ret[i]).position[1] << " " << (ret[i]).position[2] << std::endl;
+			(ret[i]).texCoord = glm::vec2(0.0,0.0);//texture coordinates not implemented yet. 
 			(ret[i]).color = cur_color;
-			//std::cout <<"i: " << i <<std::endl;
-			
-			
-			
-			//(ret[i]).position = glm::vec3(vertsTeapotS[track], vertsTeapotS[track+1], vertsTeapotS[track+2]);
-			//(ret[i]).position = glm::vec3(normsTeapotS[((vertIdxsTeapotS[i] * 3))], normsTeapotS[((vertIdxsTeapotS[i] * 3)+1)], normsTeapotS[((vertIdxsTeapotS[i] * 3)+2)]);
-			//(ret[i]).texCoord = glm::vec2(0.0,0.0);
-			//std::cout << "pos: " << (ret[i]).position[0] << " " << (ret[i]).position[1] << " " << (ret[i]).position[2] << std::endl;
-			//(ret[i]).color = cur_color;
 			
 	}
-	//for(int i=0; i<(GLUT_SOLID_TEAPOT_N_TRI*3); i++){
-	//		std::cout << "pos: "(ret[i]).position[0]<<" "<<(ret[i]).position[1]<<" "<<(ret[i]).position[2]<<std::endl;
-	//		std::cout << "norm: "(ret[i]).normal[0]<<" "<<(ret[i]).normal[1]<<" "<<(ret[i]).normal[2]<<std::endl;
-	//}
-	//for(int i=0; i<6144; i++){
-	//		std::cout<<"vert["<<i<<"]: "<<vertsTeapotS[i]<<std::endl;
-	//}
 	return ret;
 }
 
+//returns the size in bytes of the array holding all of the vertex structs. 
 int vkTeapotGetSize(){
 	return vkTeapotSize;
 }
