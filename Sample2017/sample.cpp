@@ -336,10 +336,6 @@ VkDebugReportCallbackEXT	WarningCallback;
 uint32_t			Width;
 
 
-//#include "SampleVertexData.cpp" 
-//HERE
-//struct vertex* VertexData = vkSolidTeapot(1.0);
-
 struct vertex* VertexData;
 
 
@@ -537,24 +533,10 @@ InitGraphics( )
 
 	Init05UniformBuffer( sizeof(Misc),   	&MyMiscUniformBuffer );
 	Fill05DataBuffer( MyMiscUniformBuffer,	(void *) &Misc );
-//	VertexData[0].position = glm::vec3(0., 0., 0.);
-//	VertexData[1].position = glm::vec3(1., 0., 0.);
-//	VertexData[2].position = glm::vec3(0., 1., 0.);
-//	VertexData[0].color = glm::vec3(1., 0., 0.);
-//	VertexData[1].color = glm::vec3(1., 0., 0.);
-	//VertexData[2].color = glm::vec3(1., 0., 0.);
-	//Init05MyVertexDataBuffer(sizeof(VertexData), &MyVertexDataBuffer ); //HERE
-	//for (int i = 0; i < 9408; i++) {
-	//for (int i = 0; i < 3; i++) {
-	//	std::cout << "pos: " << (VertexData[i]).position[0] << " " << (VertexData[i]).position[1] << " " << (VertexData[i]).position[2] << std::endl;
-	//	std::cout << "color: " << (VertexData[i]).color[0] << " " << (VertexData[i]).color[1] << " " << (VertexData[i]).color[2] << std::endl;
-	//}
+
 
 	Init05MyVertexDataBuffer(vkTeapotGetSize(), &MyVertexDataBuffer); //HERE
-	//Init05MyVertexDataBuffer(sizeof(struct vertex)*3, &MyVertexDataBuffer); //HERE
-	//std::cout << "\n\nsize of teapot: " << vkTeapotGetSize() << "\n\n" << std::endl;
-	//std::cout << "\n\nsize of vertexdata: " << sizeof(VertexData) << "\n\n" << std::endl;
-	//std::cout << "\n\nsize vertex 8 36: " << sizeof(struct vertex) * 36 << "\n\n" << std::endl;
+
 	Fill05DataBuffer( MyVertexDataBuffer,			(void *) VertexData );
 
 	Init06CommandPools();
