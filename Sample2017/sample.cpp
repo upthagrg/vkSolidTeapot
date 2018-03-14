@@ -3798,8 +3798,7 @@ RenderScene( )
 	vkCmdBindVertexBuffers( CommandBuffers[nextImageIndex], 0, 1, buffers, offsets );		// 0, 1 = firstBinding, bindingCount
 
 	//const uint32_t vertexCount = sizeof(VertexData) / sizeof(VertexData[0]);
-	//const uint32_t vertexCount = (sizeof(struct vertex)*3) / sizeof(VertexData[0]); //HERE 
-	const uint32_t vertexCount = vkTeapotGetSize();
+	const uint32_t vertexCount = vkTeapotGetSize(); //HERE
 	const uint32_t instanceCount = 1; 
 	const uint32_t firstVertex = 0;
 	const uint32_t firstInstance = 0;
