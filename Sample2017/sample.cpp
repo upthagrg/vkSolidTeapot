@@ -250,20 +250,24 @@ struct bmih
 
 struct matBuf
 {
-        glm::mat4 uModelMatrix;
-        glm::mat4 uViewMatrix;
-        glm::mat4 uProjectionMatrix;
+	glm::mat4 uModelMatrix;
+	glm::mat4 uViewMatrix;
+	glm::mat4 uProjectionMatrix;
 	glm::mat4 uNormalMatrix;
 };
-
 
 // uniform variable block:
 
 struct lightBuf
 {
+	float uKa;
+	float uKd;
+	float uKs;
 	glm::vec4 uLightPos;
+	glm::vec3 uLightSpecularColor;
+	float uShininess;
+	glm::vec4 uEyePos;
 };
-
 
 // uniform variable block:
 
@@ -3917,19 +3921,40 @@ Reset( )
 
 	// initialize the matrices:
 
-	glm::vec3  eye(0.,0.,EYEDIST);
-	glm::vec3  look(0.,0.,0.);
-	glm::vec3  up(0.,1.,0.);
+	//glm::vec3  eye(0.,0.,EYEDIST);
+	//glm::vec3  look(0.,0.,0.);
+	//glm::vec3  up(0.,1.,0.);
 	Matrices.uModelMatrix      = glm::mat4( );		// identity
-	Matrices.uViewMatrix       = glm::lookAt( eye, look, up );
-	Matrices.uProjectionMatrix = glm::perspective( FOV, (double)Width/(double)Height, 0.1, 1000. );
-	Matrices.uProjectionMatrix[1][1] *= -1.;
-	Matrices.uNormalMatrix = glm::mat4(glm::inverseTranspose(glm::mat3(Matrices.uModelMatrix)));
 
+	glm::vec3  eye(0., 0., EYEDIST);
+	glm::vec3  look(0., 0., 0.);
+	glm::vec3  up(0., 1., 0.);
+	Matrices.uViewMatrix = glm::lookAt(eye, look, up);
+
+	//Matrices.uViewMatrix       = glm::lookAt( eye, look, up );
+	//Matrices.uProjectionMatrix = glm::perspective( FOV, (double)Width/(double)Height, 0.1, 1000. );
+	//Matrices.uProjectionMatrix[1][1] *= -1.;
+
+	Matrices.uProjectionMatrix = glm::perspective(FOV, (double)Width / (double)Height, 0.1, 1000.);
+	Matrices.uProjectionMatrix[1][1] *= -1.;
+
+	//Matrices.uNormalMatrix = glm::mat4(glm::inverseTranspose(glm::mat3(Matrices.uModelMatrix)));
+
+	Matrices.uNormalMatrix = glm::mat4(glm::inverseTranspose(glm::mat3(Matrices.uModelMatrix)));
 
 	// initialize the light position:
 
-	Light.uLightPos = glm::vec4( 0., 10., 0., 1. );
+	//Light.uLightPos = glm::vec4( 0., 10., 0., 1. );
+
+	// initialize the light position:
+
+	Light.uKa = 0.1f;
+	Light.uKd = 0.6f;
+	Light.uKs = 0.3f;
+	Light.uEyePos = glm::vec4(eye, 1.);
+	Light.uLightPos = glm::vec4(0., 0., 10., 1.);
+	Light.uLightSpecularColor = glm::vec3(1., 1., 1.);
+	Light.uShininess = 20.f;
 
 
 	// initialize the misc stuff:
@@ -3995,6 +4020,18 @@ UpdateScene( )
 	Misc.uTime = (float)Time;
 	Misc.uMode = Mode;
 	Fill05DataBuffer( MyMiscUniformBuffer, (void *) &Misc );
+
+	// change the viewing matrix:
+
+	glm::vec3  eye(0., 0., EYEDIST);
+	//glm::vec3  look(0., 0., 0.);
+	//glm::vec3  up(0., 1., 0.);
+	//Matrices.uViewMatrix = glm::lookAt(eye, look, up);
+
+	// change the normal matrix:
+
+	Matrices.uNormalMatrix = glm::mat4(glm::inverseTranspose(glm::mat3(Matrices.uModelMatrix)));
+
 }
 
 

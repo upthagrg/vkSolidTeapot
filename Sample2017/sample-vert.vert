@@ -3,17 +3,38 @@
 #extension GL_ARB_shading_language_420pack : enable
 
 // non-opaque must be in a uniform block:
+//layout( std140, set = 0, binding = 0 ) uniform matBuf
+//{
+//        mat4 uModelMatrix;
+//        mat4 uViewMatrix;
+//        mat4 uProjectionMatrix;
+//	mat4 uNormalMatrix;
+//} Matrices;
+
+//layout( std140, set = 1, binding = 0 ) uniform lightBuf
+//{
+//	vec4 uLightPos;
+//} Light;
+
+
+// non-opaque must be in a uniform block:
 layout( std140, set = 0, binding = 0 ) uniform matBuf
 {
         mat4 uModelMatrix;
         mat4 uViewMatrix;
         mat4 uProjectionMatrix;
-	mat4 uNormalMatrix;
+        mat4 uNormalMatrix;
 } Matrices;
 
 layout( std140, set = 1, binding = 0 ) uniform lightBuf
 {
-	vec4 uLightPos;
+        float uKa;
+        float uKd;
+        float uKs;
+        vec4  uLightPos;
+        vec3  uLightSpecularColor;
+        float uShininess;
+        vec4  uEyePos;
 } Light;
 
 
